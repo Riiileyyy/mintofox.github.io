@@ -1246,7 +1246,7 @@ function renderPostImage(url,status,id,type,authorId){
   if(!url||status==='none') return '';
   const showImgs=window.showAvatarsPref!==false;
   const isOwner=currentUser&&currentUser.id===authorId;
-  const isMod=currentUser&&currentUser.id==='c8c874e0-9567-4139-b4f8-9cbbf3452fdc';
+  const isMod=currentUser&&currentUser.id==='b2519398-75ba-40d9-94e1-4bb406a4a631';
 
   if(!showImgs){
     return`<div class="post-image-placeholder" onclick="window.openImgViewer('${esc(url)}')">🖼️ image loading is disabled... click to load anyways</div>`;
@@ -1393,7 +1393,7 @@ window.modImage=async(type,id,status)=>{
     document.getElementById('image-queue-list').innerHTML='<div class="forum-empty">no pending images :3</div>';
 };
 window.loadModQueue=async()=>{
-  if(!currentUser||currentUser.id!=='c8c874e0-9567-4139-b4f8-9cbbf3452fdc')return;
+  if(!currentUser||currentUser.id!=='b2519398-75ba-40d9-94e1-4bb406a4a631')return;
   const{data}=await sb.from('profiles').select('id,username,avatar_url,avatar_status').eq('avatar_status','pending');
   const el=document.getElementById('mod-list');
   if(!data||!data.length){el.innerHTML='<div class="forum-empty">no pending avatars :3</div>';return;}
@@ -1496,7 +1496,7 @@ window.submitReport=async()=>{
 window.loadReports=async()=>{
   const el=document.getElementById('report-list');
   if(!el)return;
-  const isMod=currentUser&&currentUser.id==='c8c874e0-9567-4139-b4f8-9cbbf3452fdc';
+  const isMod=currentUser&&currentUser.id==='b2519398-75ba-40d9-94e1-4bb406a4a631';
   const uname=currentUser?.user_metadata?.username||'unknown';
   const fakeReport=!isMod?`
     <div class="report-item" style="border-color:rgba(248,113,113,.2);">
@@ -1622,7 +1622,7 @@ function formatCountdown(until){
 window.loadBanList=async function(){
   const el=document.getElementById('ban-list');
   if(!el)return;
-  if(!currentUser||currentUser.id!=='c8c874e0-9567-4139-b4f8-9cbbf3452fdc'){
+  if(!currentUser||currentUser.id!=='b2519398-75ba-40d9-94e1-4bb406a4a631'){
     el.innerHTML='<div class="forum-empty">no active bans :3</div>';
     return;
   }
