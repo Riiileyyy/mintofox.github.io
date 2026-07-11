@@ -2720,7 +2720,7 @@ window.deletePost=async(id,inThread=false)=>{
       type:'mod_delete_post',
       post_id:null,
       reply_id:null,
-      actor_name:'r',
+      actor_name:'R',
       content:`Title: ${post.title}\n\nContent: ${post.content}`,
     });
   }
@@ -2765,7 +2765,7 @@ window.deleteReply=async(id)=>{
       type:'mod_delete_reply',
       post_id:reply.post_id,
       reply_id:null,
-      actor_name:'r',
+      actor_name:'R',
       content:`Content: ${reply.content}`,
     });
   }
