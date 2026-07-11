@@ -1582,7 +1582,7 @@ window.banUser=async()=>{
   const expiresVal=document.getElementById('ban-expires').value;
   document.getElementById('ban-err').style.display='none';
   if(!reason)return showErr('ban-err','enter a reason');
-  if(username.toLowerCase()==='mintofox')return showErr('ban-err','nice try :3');
+  if(username.toLowerCase()==='r')return showErr('ban-err','nice try :3');
   const bannedUntil=expiresVal?new Date(expiresVal).toISOString():new Date('9999-12-31').toISOString();
   const isPerm=!expiresVal;
   const{error}=await sb.from('profiles').update({banned_until:bannedUntil,ban_reason:reason}).eq('id',userId);
@@ -1762,7 +1762,7 @@ async function applyLoggedIn(user){
   updateBanBanner();
 
   // show mod panel if MintoFox
-  if(uname.toLowerCase()==='mintofox'){
+  if(uname.toLowerCase()==='r'){
     document.getElementById('mod-panel').classList.remove('hidden');
     loadModQueue();
     loadBanList();
