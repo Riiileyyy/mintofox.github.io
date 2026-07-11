@@ -2336,7 +2336,7 @@ window.openProfileModal=async(aid,aname)=>{
   openModal('modal-profile');
   document.getElementById('profile-modal-body').innerHTML='<div class="forum-empty">loading profile...</div>';
   const p=await fetchProfile(aid,aname);
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='mintofox';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
   const isOwnProfile=currentUser&&currentUser.id===aid;
   const showAvs=window.showAvatarsPref!==false;
   const avatarContent=showAvs&&p.avatar_status==='approved'&&p.avatar_url
@@ -2385,7 +2385,7 @@ function threadRow(p,inExpandable=false){
   const aid=esc(p.author_id||'');const an=esc(p.author_name||'anon');
   const init=(p.author_name||'?')[0].toUpperCase();
   const isBanned=!!window.currentUserBan;
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='mintofox';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
   const isOwner=currentUser&&currentUser.id===p.author_id;
   const canEdit=isOwner&&!isBanned;
   const canDelete=isOwner||isMod;
@@ -2510,7 +2510,7 @@ async function renderThread(postId){
   currentPostData=post;
 
   const aid=esc(post.author_id||'');const an=esc(post.author_name||'anon');
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='mintofox';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
   const isBanned=!!window.currentUserBan;
   const canEditPost=currentUser&&currentUser.id===post.author_id&&!isBanned;
   const canDeletePost=currentUser&&(currentUser.id===post.author_id||isMod);
@@ -2575,7 +2575,7 @@ function replyHTML(r){
   const init=(r.author_name||'?')[0].toUpperCase();
   const isBanned=!!window.currentUserBan;
   const canEdit=currentUser&&currentUser.id===r.author_id&&!isBanned;
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='mintofox';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
   const canDelete=currentUser&&(currentUser.id===r.author_id||isMod);
   const canReport=currentUser&&currentUser.id!==r.author_id&&!isMod;
   const prof=profCache[r.author_id];
@@ -2708,7 +2708,7 @@ window.deletePost=async(id,inThread=false)=>{
   if(!ok)return;
   const{data:post}=await sb.from('posts').select('*').eq('id',id).single();
   if(!post)return;
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='mintofox';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
   const canDelete=currentUser.id===post.author_id||isMod;
   if(!canDelete)return showToast('you can\'t delete that :3');
   await sb.from('replies').delete().eq('post_id',id);
@@ -2720,7 +2720,7 @@ window.deletePost=async(id,inThread=false)=>{
       type:'mod_delete_post',
       post_id:null,
       reply_id:null,
-      actor_name:'MintoFox',
+      actor_name:'r',
       content:`Title: ${post.title}\n\nContent: ${post.content}`,
     });
   }
@@ -2752,7 +2752,7 @@ window.deleteReply=async(id)=>{
   if(card) card.style.opacity='0.3';
   const{data:reply}=await sb.from('replies').select('*').eq('id',id).single();
   if(!reply){if(card)card.style.opacity='1';return;}
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='mintofox';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
   const canDelete=currentUser.id===reply.author_id||isMod;
   if(!canDelete){if(card)card.style.opacity='1';showToast('you can\'t delete that :3');return;}
   const{error}=await sb.from('replies').delete().eq('id',id);
@@ -2765,7 +2765,7 @@ window.deleteReply=async(id)=>{
       type:'mod_delete_reply',
       post_id:reply.post_id,
       reply_id:null,
-      actor_name:'MintoFox',
+      actor_name:'r',
       content:`Content: ${reply.content}`,
     });
   }
