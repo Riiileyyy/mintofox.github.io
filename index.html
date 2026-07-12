@@ -1150,7 +1150,20 @@ footer{text-align:center;padding:1.5rem;font-size:.8rem;color:rgba(232,254,242,.
 
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-const sb = createClient('https://lmupyrjmsupdvxcewbhy.supabase.co','sb_publishable_Gn_DeJIDXWKnt5-ycuIAEA_afmk25X0');
+const SUPABASE_URL = 'https://lmupyrjmsupdvxcewbhy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_Gn_DeJIDXWKnt5-ycuIAEA_afmk25X0';
+// Reroute every request through the "proxy" Edge Function instead of calling
+// Supabase directly. Needed because Tor Browser sends Origin: null on .onion
+// pages, which Supabase's CORS layer rejects when called directly.
+function proxiedFetch(input, init) {
+  let urlStr = typeof input === 'string' ? input : input.url;
+  if (urlStr.startsWith(SUPABASE_URL)) {
+    const rest = urlStr.slice(SUPABASE_URL.length); // e.g. /rest/v1/posts?...
+    urlStr = `${SUPABASE_URL}/functions/v1/proxy${rest}`;
+  }
+  return fetch(urlStr, init);
+}
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { global: { fetch: proxiedFetch } });
 
 // ─── utils ────────────────────────────────────────────────────
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
