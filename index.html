@@ -1595,7 +1595,7 @@ window.banUser=async()=>{
   const expiresVal=document.getElementById('ban-expires').value;
   document.getElementById('ban-err').style.display='none';
   if(!reason)return showErr('ban-err','enter a reason');
-  if(username.toLowerCase()==='r')return showErr('ban-err','nice try :3');
+  if(username.toLowerCase()==='guest')return showErr('ban-err','nice try :3');
   const bannedUntil=expiresVal?new Date(expiresVal).toISOString():new Date('9999-12-31').toISOString();
   const isPerm=!expiresVal;
   const{error}=await sb.from('profiles').update({banned_until:bannedUntil,ban_reason:reason}).eq('id',userId);
@@ -1775,7 +1775,7 @@ async function applyLoggedIn(user){
   updateBanBanner();
 
   // show mod panel if MintoFox
-  if(uname.toLowerCase()==='r'){
+  if(uname.toLowerCase()==='guest'){
     document.getElementById('mod-panel').classList.remove('hidden');
     loadModQueue();
     loadBanList();
@@ -2349,7 +2349,7 @@ window.openProfileModal=async(aid,aname)=>{
   openModal('modal-profile');
   document.getElementById('profile-modal-body').innerHTML='<div class="forum-empty">loading profile...</div>';
   const p=await fetchProfile(aid,aname);
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='guest';
   const isOwnProfile=currentUser&&currentUser.id===aid;
   const showAvs=window.showAvatarsPref!==false;
   const avatarContent=showAvs&&p.avatar_status==='approved'&&p.avatar_url
@@ -2398,7 +2398,7 @@ function threadRow(p,inExpandable=false){
   const aid=esc(p.author_id||'');const an=esc(p.author_name||'anon');
   const init=(p.author_name||'?')[0].toUpperCase();
   const isBanned=!!window.currentUserBan;
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='guest';
   const isOwner=currentUser&&currentUser.id===p.author_id;
   const canEdit=isOwner&&!isBanned;
   const canDelete=isOwner||isMod;
@@ -2523,7 +2523,7 @@ async function renderThread(postId){
   currentPostData=post;
 
   const aid=esc(post.author_id||'');const an=esc(post.author_name||'anon');
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='guest';
   const isBanned=!!window.currentUserBan;
   const canEditPost=currentUser&&currentUser.id===post.author_id&&!isBanned;
   const canDeletePost=currentUser&&(currentUser.id===post.author_id||isMod);
@@ -2588,7 +2588,7 @@ function replyHTML(r){
   const init=(r.author_name||'?')[0].toUpperCase();
   const isBanned=!!window.currentUserBan;
   const canEdit=currentUser&&currentUser.id===r.author_id&&!isBanned;
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='guest';
   const canDelete=currentUser&&(currentUser.id===r.author_id||isMod);
   const canReport=currentUser&&currentUser.id!==r.author_id&&!isMod;
   const prof=profCache[r.author_id];
@@ -2721,7 +2721,7 @@ window.deletePost=async(id,inThread=false)=>{
   if(!ok)return;
   const{data:post}=await sb.from('posts').select('*').eq('id',id).single();
   if(!post)return;
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='guest';
   const canDelete=currentUser.id===post.author_id||isMod;
   if(!canDelete)return showToast('you can\'t delete that :3');
   await sb.from('replies').delete().eq('post_id',id);
@@ -2733,7 +2733,7 @@ window.deletePost=async(id,inThread=false)=>{
       type:'mod_delete_post',
       post_id:null,
       reply_id:null,
-      actor_name:'R',
+      actor_name:'guest',
       content:`Title: ${post.title}\n\nContent: ${post.content}`,
     });
   }
@@ -2765,7 +2765,7 @@ window.deleteReply=async(id)=>{
   if(card) card.style.opacity='0.3';
   const{data:reply}=await sb.from('replies').select('*').eq('id',id).single();
   if(!reply){if(card)card.style.opacity='1';return;}
-  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='r';
+  const isMod=currentUser&&(currentUser.user_metadata?.username||'').toLowerCase()==='guest';
   const canDelete=currentUser.id===reply.author_id||isMod;
   if(!canDelete){if(card)card.style.opacity='1';showToast('you can\'t delete that :3');return;}
   const{error}=await sb.from('replies').delete().eq('id',id);
@@ -2778,7 +2778,7 @@ window.deleteReply=async(id)=>{
       type:'mod_delete_reply',
       post_id:reply.post_id,
       reply_id:null,
-      actor_name:'R',
+      actor_name:'guest',
       content:`Content: ${reply.content}`,
     });
   }
